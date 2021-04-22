@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Meta -->
+    <meta name="description" content="Responsive Bootstrap 4 Dashboard Template">
+    <meta name="author" content="BootstrapDash">
+
+    <title>Azia Responsive Bootstrap 4 Dashboard Template</title>
+
+    <!-- vendor css -->
+    <!-- Load Leaflet from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@2.5.3/dist/esri-leaflet.js"
+        integrity="sha512-K0Vddb4QdnVOAuPJBHkgrua+/A9Moyv8AQEWi0xndQ+fqbRfAFd47z4A9u1AW/spLO0gEaiE1z98PK1gl5mC5Q=="
+        crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="/assets/js/leaflet.ajax.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- azia CSS -->
+    <link rel="stylesheet" href="/assets/css/map.css">
+    <!-- css icon -->
+
+    <link rel="stylesheet" href="/assets/css/main.css" />
+
+    <link rel="stylesheet" href="/assets/css/LineIcons.2.0.css" />
+
+</head>
+
+<style>
+    #newhover a:hover {
+        color: #000;
+        cursor: pointer;
+    }
+
+    .droplegend {
+        font-size: 12px;
+        background-color: #fff;
+        color: #000;
+        width: 100%;
+        padding: 10px 3px;
+        text-align: left;
+        margin-bottom: 10px;
+        /* border-radius: 4px; */
+        font-weight: bold;
+        border-bottom: 2px solid #d1d1d173
+    }
+</style>
+
+<body class="az-body az-body-sidebar">
+    <div class="az-sidebar">
+        <div class="az-sidebar-header">
+            <a href="index.html" class="az-logo">PPI Compact</a>
+        </div>
+        <div class="az-sidebar-loggedin">
+            <div class="az-img-user online"><img src="assets/images/logo/participation.png" alt=""></div>
+            <div class="media-body">
+                <h6>PPI Compact</h6>
+                <span>Peta
+                </span>
+            </div>
+            <!-- media-body -->
+        </div>
+        <!-- az-sidebar-loggedin -->
+        <div class="az-sidebar-loggedin">
+            <h6>Legenda Peta</h6>
+        </div>
+        <!-- az-sidebar-loggedin -->
+        <div class="az-sidebar-body">
+            <%
+            let i = 0;
+            let obj = legend
+            Object.values(obj).forEach(function(data){
+            %>
+            <ul class="nav">
+                <li class="nav-item active show" style="height: 100%;">
+                    <label class="switch">
+                        <input id="shpID<%= Object.values(obj)[i].id_shp %>" + type="checkbox" class="default">
+                        <span class="slider round "></span>
+                    </label>
+                    <a class="nav-link ">
+                        <i class="lni lni-layers"></i>
+                        <%= Object.values(obj)[i].nama_shp %>
+                    </a>
+                    <button id="droplegend<%= Object.values(obj)[i].id_shp %>" data-toggle="modal"
+                        class="btn droplegend show">
+                        <i class="lni lni-arrow-down"></i> Show legend</button>
+                    <button id="hidedroplegend<%= Object.values(obj)[i].id_shp %>" data-toggle="modal"
+                        class="btn droplegend hide" style="display: none;">
+                        <i class="lni lni-arrow-up"></i> Hide legend</button>
+                    <ul id="droplegend<%= Object.values(obj)[i].id_shp %>" class="list-group list-group-flush nav-sub"
+                        style="display: none;">
+                        <%
+                            let arr = Object.values(obj)[i].prop_shp || Object.values(obj)[i].color_prop 
+                            for(let z = 0; z <  Object.values(obj)[i].prop_shp.length; z++) { %>
+                        %>
+                        <li class="nav-sub-item">
+                            <i id="mapIcon" class="lni lni-bg-circle" style="font-weight: bold;border-radius: 0;margin: 7px 5px 4px -2px;background-color:<%- JSON.stringify(Object.values(legend)[i].color_prop[z]).replace('"','') %>></i>
+                            <a id="" class=" nav-sub-link"
+                                style="text-transform: capitalize;"><%= Object.values(obj)[i].prop_shp[z] %></a>
+                        </li>
+                        <%}%>
+                    </ul>
+                </li>
+            </ul>
+            <%  i++; }) %>
+        </div>
+    </div>
+
+    <div class="az-content az-content-dashboard-two">
+        <div class="az-header">
+            <div class="container-fluid">
+                <div id="newhover" class="az-header-left">
+                    <a onclick="window.history.back();" id="azSidebarToggle" class=""> <i
+                        class="lni lni-bg-arrow-left"></i>Kembali</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="az-content-body">
+            <div id="map" style="height: 100%;"></div>
+            <div id="basemaps-wrapper" class="leaflet-bar">
+                <select id="basemaps" class="form-control">
+                    <option value="Topographic">Topographic</option>
+                    <option value="Streets">Streets</option>
+                    <option value="NationalGeographic">National Geographic</option>
+                    <option value="Oceans">Oceans</option>
+                    <option value="Gray">Gray</option>
+                    <option value="DarkGray">Dark Gray</option>
+                    <option value="Imagery">Imagery</option>
+                    <option value="ImageryClarity">Imagery (Clarity)</option>
+                    <option value="ImageryFirefly">Imagery (Firefly)</option>
+                    <option value="ShadedRelief">Shaded Relief</option>
+                    <option value="Physical">Physical</option>
+                </select>
+            </div>
+        </div>
+
+
+        <!-- <script src="assets/js/bootstrap.min.js"></script> -->
+        <script src="assets/js/wow.min.js"></script>
+        <script src="assets/js/tiny-slider.js"></script>
+        <script src="assets/js/glightbox.min.js"></script>
+        <script src="assets/js/additional.js"></script>
+        <script src="assets/js/map.js"></script>
+        <script src="assets/js/addjson.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+</body>
+<script>
+
+const styleBase = {
+    color: '#000',
+    weight: 2,
+}
+
+    let adminLine = new L.GeoJSON.AJAX(["<%= baseLayer %>"],{style:styleBase}).addTo(map)
+
+    let base = {}
+
+    '<% for(let a = 0; a < Object.values(legend).length; a++ ) { %>'
+    base["<%=Object.values(legend)[a].id_shp %>"] = {
+        path: "<%= Object.values(legend)[a].path_shp %>",
+        attr: {
+            style_by: <%- JSON.stringify(Object.values(legend)[a].style_by) %> ,
+            color: <%- JSON.stringify(Object.values(legend)[a].color_prop) %> ,
+            prop: <%- JSON.stringify(Object.values(legend)[a].prop_shp) %>,
+        }
+    }
+    '<% } %>'
+
+    for (let i = 0; i < Object.keys(base).length; i++) {
+        let geo = $.ajax({
+            url: '../' + Object.values(base)[i].path,
+            dataType: "json",
+            success: console.log("County data successfully loaded."),
+            error: function (xhr) {
+                alert(xhr.statusText)
+            }
+        })
+        console.log(geo)
+        $.when(geo).done(function () {
+            let layer = geo.responseJSON
+            let paramsFunction = 'feature.properties.' + Object.values(base)[i].attr.style_by
+            let b = document.querySelectorAll('.az-sidebar-body .switch input')
+            let oneach =   function popUp(f,l){
+                var out = [];
+                if (f.properties){
+                    for(key in f.properties){
+                        out.push(key+": "+f.properties[key]);
+                    }
+                    l.bindPopup(out.join("<br />"));
+                }
+            }
+            let style = feature => {
+                for (let y = 0; y < Object.values(base)[i].attr.color.length; y++) {
+                    switch (eval(paramsFunction)) {
+                        case Object.values(base)[i].attr.prop[y]:
+                            return {
+                                fillColor: Object.values(base)[i].attr.color[y],
+                                color: '#000',
+                                weight:0 ,
+                                opacity: 100,
+                                fillOpacity: 0.5,
+                            };
+                            break
+                    }
+                }
+            }
+
+            let layers = L.geoJSON(layer, {onEachFeature:oneach,
+                style: style
+            })
+            let inputID = document.querySelectorAll('.az-sidebar-body input')[i]
+
+            document.getElementById(inputID.id).onclick = function () {
+                if (this.checked == true) {
+                    map.addLayer(layers)
+                } else {
+                    map.removeLayer(layers)
+                }
+            }
+
+            let btnShow = document.querySelectorAll('.nav button.show')[i]
+            let btnHide = document.querySelectorAll('.nav button.hide')[i]
+
+            let navli = document.getElementsByClassName('list-group')[i]
+            //    console.log(navli)
+            document.getElementById(btnShow.id).addEventListener('click', (elem) => {
+                if (elem) navli.style.display = 'block'
+                btnHide.style.display = 'block'
+                btnShow.style.display = 'none'
+            })
+            document.getElementById(btnHide.id).addEventListener('click', (elem) => {
+                if (elem) navli.style.display = 'none'
+                btnHide.style.display = 'none'
+                btnShow.style.display = 'block'
+            })
+        });
+    }
+    // console.log()
+</script>
+
+</html>

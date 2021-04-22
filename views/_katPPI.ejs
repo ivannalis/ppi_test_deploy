@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/_adminheaderlink'); %>
+</head>
+
+<body>
+    <!-- begin app -->
+    <div class="app">
+        <!-- begin app-wrap -->
+        <div class="app-wrap">
+            <!-- begin app-header -->
+            <%- include('./partials/_adminheader'); %>
+            <!-- begin app-container -->
+            <div class="app-container">
+                <!-- begin app-nabar -->
+                <%- include('./partials/_adminnav'); %>
+                <!-- begin app-main -->
+                <div class="app-main" id="main">
+                    <!-- begin container-fluid -->
+                    <div class="container-fluid">
+                        <!-- begin row -->
+                        <div class="row">
+                            <div class="col-md-12 m-b-30">
+                                <!-- begin page title -->
+                                <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                                    <div class="page-title mb-2 mb-sm-0">
+                                        <h1>Form Kategori SHP</h1>
+                                    </div>
+                                    <div class="ml-auto d-flex align-items-center">
+                                        <nav>
+                                            <ol class="breadcrumb p-0 m-b-0">
+                                                <li class="breadcrumb-item">
+                                                    <a href="index.html">
+                                                        <i class="ti ti-home"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="breadcrumb-item">
+                                                    Forms
+                                                </li>
+                                                <li class="breadcrumb-item active text-primary" aria-current="page">
+                                                    Kategori SHP</li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card card-statistics">
+                                    <div class="card-body">
+                                        <form action="/auth/_katPPI" method="POST">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="indikator">Tambah Kategori Indikator</label>
+                                                    <input type="text" class="form-control" id="indikator"
+                                                        placeholder="Mis. Penurunan Laju Deforestasi" name="indikator"
+                                                        required="required">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="deskripsi">Kategori PPI</label>
+                                                    <select class="form-control" name="kat_ppi" style="height: calc(2.25rem + 2px);;"
+                                                        enctype="multipart/form-data" required="required">
+                                                        <option ></option>
+                                                        <option value="Proteksi">Proteksi</option>
+                                                        <option value="Produksi">Produksi</option>
+                                                        <option value="Inklusi">Inklusi</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Add
+                                                <i class="lni lni-arrow-right"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card card-statistics clients-contant">
+                                    <div class="card-body py-0 table-responsive">
+                                        <table id="tableedit"
+                                        class="table display responsive nowrap table-light table-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Kategori</th>
+                                                <th>Indikator</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                            if(katPPI.length!=0){
+                                            var i=1;
+                                            katPPI.forEach(function(data){
+                                            %>
+                                            <tr>
+                                                <td>
+                                                    <%=data.indikator %>
+                                                    <br>
+                                                    <span
+                                                        style="font-size: 12px;font-style: italic;color:rgba(0, 0, 0, 0.816)"><%=data.deskripsi %></span>
+                                                </td>
+                                                <td style="">
+                                                    <a href="/_detailIndikator/<%= data.id_katppi %>/<%= data.kat_ppi %>/<%= data.indikator %>"
+                                                        class="btn btn-icon btn-outline-primary btn-round mr-2 mb-2 mb-sm-0 "><i
+                                                            style="font-size: 14px;padding:0px"
+                                                            class=" lni lni-arrow-right"></i></a>
+                                                </td>
+                                                <td style="width:50px">
+                                                    <a id="<%=data.id%>" href="/auth/editKat/<%= data.id %>"
+                                                        class="btn btn-icon btn-outline-primary btn-round mr-2 mb-2 mb-sm-0 "><i
+                                                            style="font-size: 14px;padding:0px"
+                                                            class=" lni lni-pencil"></i></a>
+                                                </td>
+                                                <td style="width:50px">
+                                                    <a id="<%=data.id%>"
+                                                        class="btn btn-icon btn-outline-danger btn-round"
+                                                        onclick="alertDelete(this)"><i style="font-size: 14px;"
+                                                            class="lni lni-close"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <%  i++; }) %>
+                                            <% } else { %>
+                                            <tr>
+                                                <td colspan="4">Belum ada kategori</td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+            <%- include('./partials/_adminfooter'); %>
+        </div>
+    </div>
+
+    <script>
+        // delete confirmation modal
+        let modal = document.getElementById('defaultModal')
+        // delete submit button
+        let btnConfirm = document.getElementById('btn-sub-confirm')
+        // retype confirmation
+        let wrong = document.getElementById('konfirmText')
+        // input confirmation text
+        let input = document.getElementById('confirm')
+        // table edit & delete
+        let tbleDel = document.getElementById('tableedit')
+        // id bucket
+        let sn = ''
+
+        function alertDelete(elem) {
+            for (let i = 1; i < tbleDel.rows.length; i++) {
+                let x = tbleDel.rows[i].cells[2]
+                let selector = x.querySelector("a")
+                switch (elem.getAttribute('id')) {
+                    case selector.getAttribute('id'):
+                        sn = selector.getAttribute('id')
+                        modal.style.display = 'block'
+                        break;
+                }
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = 'none'
+        }
+
+        function OkeDelete() {
+            if (input.value != 'ppi compact' || input.value === '') {
+                wrong.style.display = 'block'
+            } else {
+                window.location = '/auth/delete/' + sn
+            }
+        }
+    </script>
+</body>
+
+</html>

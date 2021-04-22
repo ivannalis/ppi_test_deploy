@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/_adminheaderlink'); %>
+</head>
+<style>
+    table {
+        counter-reset: tableCount;
+    }
+
+    .counterCell:before {
+        content: counter(tableCount);
+        counter-increment: tableCount;
+    }
+</style>
+
+<body>
+    <!-- begin app -->
+    <div class="app">
+        <!-- begin app-wrap -->
+        <div class="app-wrap">
+            <!-- begin pre-loader -->
+            <%- include('./partials/_adminheader'); %>
+            <div class="app-container">
+                <%- include('./partials/_adminnav'); %>
+                <div class="app-main" id="main">
+                    <!-- begin container-fluid -->
+                    <div class="container-fluid">
+                        <!-- begin row -->
+                        <div class="row">
+                            <div class="col-md-12 m-b-30">
+                                <!-- begin page title -->
+                                <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                                    <div class="page-title mb-2 mb-sm-0">
+                                        <h1>Indikator PPI -  <%=rincian%> </h1>
+                                    </div>
+                                    <div class="ml-auto d-flex align-items-center">
+                                        <nav>
+                                            <ol class="breadcrumb p-0 m-b-0">
+                                                <li class="breadcrumb-item">
+                                                    <a href="index.html"><i class="ti ti-home"></i></a>
+                                                </li>
+                                                <li class="breadcrumb-item">
+                                                    Pages
+                                                </li>
+                                                <li class="breadcrumb-item active text-primary" aria-current="page">
+                                                    Clients</li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-statistics clients-contant">
+                                    <div class="card-body">
+                                        <form action="/auth/_updatecapaian/<%=id_detail_kat_ppi%>/<%=ppi%>/<%=id_kat_ppi%>/<%=rincian%>/<%=satuan%>" method="POST">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <input type="hidden" class="form-control" id="id_katppi"
+                                                        name="id_detail_kat_ppi" value="<%=id_detail_kat_ppi%>">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <input type="hidden" class="form-control" id="kat_ppi"
+                                                        name="id_kat_ppi" value="<%=id_kat_ppi%>">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="ppi">Kategori</label>
+                                                    <input type="text" class="form-control" id="ppi"
+                                                       name="ppi2" value="<%=ppi%>" disabled >
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="indikator">Tanggal Update</label>
+                                                    <input type="date" class="form-control" id="datadasar"
+                                                        name="last_update" required="required">
+
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="indikator">Update Capaian</label>
+                                                    <input type="number" class="form-control" 
+                                                       name="update_capaian" required="required">
+
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="indikator">Satuan</label>
+                                                    <input type="text" class="form-control" id="satuan" 
+                                                        name="satuan" required="required" value="<%=satuan%>" disabled>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Add
+                                                <i class="lni lni-arrow-right"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="card-body py-0 table-responsive">
+                                        <table id="LoiTable" class="table clients-contant-table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col">Kategori PPI</th>
+                                                    <th scope="col">ID Detail Kategori</th>
+                                                    <th scope="col">Capaian</th>
+                                                    <th scope="col">Tanggal Update</th>
+                                                    <th scope="col">Edit</th>
+                                                    <th scope="col">Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(update.length!=0){
+                                                 let i=1;
+                                                 update.forEach(function(data){ %>
+                                                <tr>
+                                                    <td class="counterCell"></td>
+                                                    <td>
+                                                        <%=data.ppi %>
+                                                    </td>
+                                                    <td>
+                                                        <%=data.id_detail_kat_ppi%>
+                                                    </td>
+                                                    <td>
+                                                        <%=data.update_capaian + ' ' + data.satuan%>
+                                                    </td>
+                                                    <td>
+                                                        <%=data.last_update%>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/auth/editLoi/<%=data.id_detail_kat_ppi%>"
+                                                            class="btn btn-icon btn-outline-primary btn-round mr-2 mb-2 mb-sm-0 ">
+                                                            <i class=" lni lni-pencil"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a id="<%=data.id_loi%>" onclick="alertDelete()"
+                                                            class="btn btn-icon btn-outline-danger btn-round">
+                                                            <i class="lni lni-close"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <% i++; }) %>
+                                                <% } else { %>
+                                                <tr>
+                                                    <td colspan="6">Belum ada rincian</td>
+                                                </tr>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('./partials/_adminfooter'); %>
+        </div>
+    </div>
+    <%- include('./partials/_deleteConfirm'); %>
+    <!-- end app -->
+    <script>
+        function OkeDelete() {
+            if (input.value != 'ppi compact' || input.value === '') {
+                wrong.style.display = 'block'
+            } else {
+                window.location = '/auth/deleteLoi/' + sn
+            }
+        }
+
+        let table = document.getElementById('LoiTable')
+
+        for (let a = 1; a < table.rows.length; a++) {
+            let c = table.rows[a].cells[3]
+            let selector = c.querySelector('input').value
+            let inp = document.getElementById('tdList')
+
+            if (selector == 1) {
+                c.innerHTML = '<a id="status" class="dot"></a><span>Approve</span>'
+            } else {
+                c.innerHTML = '<a id="status" class="dot bg-danger"></a><span>Hide</span>'
+            }
+        }
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/_adminheaderlink'); %>
+</head>
+<style>
+    select.form-control:not([size]):not([multiple]) {
+        height: 33px;
+    }
+</style>
+
+<body>
+    <!-- begin app -->
+    <div class="app">
+        <!-- begin app-wrap -->
+        <div class="app-wrap">
+            <!-- begin pre-loader -->
+            <%- include('./partials/_adminheader'); %>
+            <div class="app-container">
+                <%- include('./partials/_adminnav'); %>
+                <div class="app-main" id="main">
+                    <!-- begin container-fluid -->
+                    <div class="container-fluid">
+                        <!-- begin row -->
+                        <div class="row">
+                            <div class="col-md-12 m-b-30">
+                                <!-- begin page title -->
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <!-- start-clients contant-->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-10 col-12">
+                                    <div class="add-resume-inner box">
+                                        <div class="post-header align-items-center justify-content-center">
+                                            <h3>Upload Project</h3>
+                                        </div>
+                                    </div>
+                                    <form action="/auth/_project" method="POST" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Funding</label>
+                                                    <input type="text" class="form-control" name="funding"
+                                                        placeholder="Misl. UNDP" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Jenis Afiliasi</label>
+                                                    <select class="form-control" name="jenis_afiliasi"
+                                                        id="jenis_afiliasi">
+                                                        <option value="Government">Government</option>
+                                                        <option value="Non-Government Organization">
+                                                            Non-Government
+                                                            Organization</option>
+                                                        <option value="Private Sector">Private
+                                                            Sector
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">Negara</label>
+                                                    <select class="form-control selectpicker countrypicker"
+                                                        name="negara"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Lokasi Project</label>
+                                                    <input type="text" class="form-control" name="lokasi_project"
+                                                        placeholder="Misl. Kec. Batu Ampar" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">Start Project</label>
+                                                    <input type="date" class="form-control" name="start_project">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">End Project</label>
+                                                    <input type="date" class="form-control" name="end_project">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Estimasi Budget</label>
+                                                    <input id="number" type="text" class="form-control"
+                                                        name="estimasi_budget" placeholder="Rp" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Status Project</label>
+                                                    <select class="form-control" name="status_project"
+                                                        id="status_project">
+                                                        <option value="Contracting">Contracting</option>
+                                                        <option value="Running">Running</option>
+                                                        <option value="Closing">Closing</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Judul Project</label>
+                                            <input type="text" class="form-control" name="judul_project" placeholder="Misl. Supporting Heart oOf Borneo (HOB) Initiative through an Advanced Village Forest Management in Bahenap Village, Kapuas
+                                            Hulu District" style="border:none; border-bottom:1px solid #000" required>
+                                        </div>
+                                        <label>Deskripsi Project</label>
+                                        <div class="form-group">
+                                            <textarea id="editor" name="deskripsi_project"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="path_shp">Upload Logo</label><br>
+                                            <input type="file" id="logo" name="path_upload" accept="image/*">
+                                            <p>Maximum file size: 15 MB</p>
+                                        </div>
+                                        <div class="form-group" style="width:50%">
+                                            <label class="control-label">Status</label>
+                                            <select class="form-control" name="visibility" id="NewStatus"
+                                                onchange="StatusVal()">
+                                                <option id="0" value="0">Hide</option>
+                                                <option id="1" value="1">Visible</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <button type="submit" class="btn">
+                                            <iclass="lni lni-telegram"></i> Kirim
+                                        </button>
+                                    </form>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./partials/_adminfooter'); %>
+    </div>
+
+    <%- include('./partials/_deleteConfirm'); %>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bootstrap-select-country.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/aw1nymsczy0mzlbwk9lori95hrivhk47y161gtdxoliitdum/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea#editor',
+            menubar: false
+        });
+    </script>
+    <!-- end app -->
+    <script>
+        function addCommas(nStr) {
+
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+        function Separator(x) {
+            document.getElementById('separator').value = x.value.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+    </script>
+</body>
+
+
+</html>

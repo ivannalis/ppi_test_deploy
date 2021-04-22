@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <%- include('./partials/headlink'); %>
+    <link rel="stylesheet" href="/assets/css/main2.css" />
+
+</head>
+<style>
+    .find-job .single-job .job-content p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* number of lines to show */
+        -webkit-box-orient: vertical;
+        margin-top: 0px !important;
+        font-size: 12px !important;
+    }
+
+    /* 
+    .find-job .single-job .job-content h4 {
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 20px;
+    } */
+
+    .find-job .single-job .job-content p+p {
+        display: none;
+    }
+</style>
+
+<body>
+    <%- include('./partials/header'); %>
+
+    <!-- <div class="breadcrumbs overlay">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs-content">
+                        <h1 class="page-title">List Project PPI Compact
+                        </h1>
+                        <p>
+                            Lihat daftar project yang sedang berjalan di
+                            <br>Kabupaten Kubu Raya per 2021.
+                        </p>
+                    </div>
+                    <ul class="breadcrumb-nav">
+                        <li>
+                            <a href="/">Kembali</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <section class="find-job section">
+        <div class="search-job">
+            <div class="container">
+                <!-- <div class="col-lg-2 col-md-2 col-xs-12 button">
+                            <button onclick="window.location='/project'" class="btn btn-common float-right">All Project</button>
+                        </div> -->
+                <div class="search-nner">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-5 col-xs-12">
+                        <select class="form-control" name="status_project" id="status_project">
+                            <option value="All Project">All Project</option>
+                            <option value="Running">Running</option>
+                            <option value="Contracting">Contracting</option>
+                            <option value="Closing">Closing</option>
+                        </select>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-xs-12">
+                            <input type="text" class="form-control" value="Kab. Kubu Raya" disabled>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 button">
+                            <button type="submit" class="btn btn-common float-right" onclick="ChangeStatus()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-2 col-md-2 col-xs-12 button">
+                            <button onclick="window.location='/filterProject/Running'" type="submit" class="btn btn-common float-right" style="background-color: #21E462;">Running</button>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 button">
+                            <button onclick="window.location='/filterProject/Contracting'" type="submit" class="btn btn-common float-right" style="background-color: #E48221;">Contracting</button>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 button">
+                            <button onclick="window.location='/filterProject/Closing'" type="submit" class="btn btn-common float-right" style="background-color: #E42141;">Closing</button>
+                        </div> -->
+
+            </div>
+        </div>
+        <div class="container">
+            <div class="single-head">
+                <div class="row">
+                    <!-- left -->
+                    <% if(project.length!=0){
+                        let i=1;
+                        project.forEach(function(data){ %>
+                    <% if(i % 2 == 2) { %>
+                    <div class="col-lg-6 col-12">
+                        <div class="single-job">
+                            <div class="job-image">
+                                <img src="<%= data.logo.replace('public', '') %>" alt="#" width=60>
+                            </div>
+                            <div id="tesgas" class="job-content">
+                                <h4 id="leftAfter"><a><%= data.funding %></a></h4>
+                                <%- data.deskripsi_project %>
+                                <ul>
+                                    <li><i class="lni lni-date"></i><a href="#"> Start: <%= data.start_project %></a>
+                                    </li>
+                                    <li><i class="lni lni-idr"></i><span>Rp</span>
+                                        <%= data.estimasi_budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                    </li>
+                                    <li><i class="lni lni-map-marker"></i> <%= data.lokasi_project %></li>
+                                </ul>
+                            </div>
+                            <div class="job-button">
+                                <ul>
+                                    <li><span><%= data.status_project %></span></li>
+                                    <li><a href="/auth/detailProject/<%= data.id_project %>">Detail</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <% } else { %>
+                    <div class="col-lg-6 col-12">
+                        <div class="single-job">
+                            <div class="job-image">
+                                <img src="<%= data.logo.replace('public', '') %>" alt="#" width=60>
+                            </div>
+                            <div id="tesgas" class="job-content">
+                                <h4 id="leftAfter"><a><%= data.funding %></a></h4>
+                                <%- data.deskripsi_project %>
+                                <ul>
+                                    <li><i class="lni lni-date"></i><a href="#"> Start: <%= data.start_project %></a>
+                                    </li>
+                                    <li><i class="lni lni-idr"></i><span>Rp</span>
+                                        <%= data.estimasi_budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                    </li>
+                                    <li><i class="lni lni-map-marker"></i> <%= data.lokasi_project %></li>
+                                </ul>
+                            </div>
+                            <div class="job-button">
+                                <ul>
+                                    <li><span class="statusproject"><%= data.status_project %></span></li>
+                                    <li><a href="projectDetail/<%= data.id_project %>">Detail</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                    <% i++; }) %> <% } 
+                    else { %>
+                    <tr>
+                        <td colspan=" 6">Belum ada applyers</td>
+                    </tr>
+                    <% } %>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pagination center">
+                            <ul class="pagination-list">
+                                <li><a href="#"><i class="lni lni-arrow-left"></i></a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#"><i class="lni lni-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('./partials/footer'); %>
+
+    <a href="#" class="scroll-top btn-hover">
+        <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <%- include('./partials/footlink'); %>
+    <script>
+        let div = document.getElementById('tesgas')
+        let sel = div.querySelector('#tesgas p')
+        console.log(sel)
+        
+        let statSelector = document.querySelectorAll('.single-job .statusproject')
+
+        for(let i in statSelector){
+            if(statSelector[i].innerHTML === 'Running'){
+                statSelector[i].style.background = '#21E462'
+            } else if(statSelector[i].innerHTML === 'Closing') {
+                statSelector[i].style.background = '#E42141'
+            } else if(statSelector[i].innerHTML === 'Contracting') {
+                statSelector[i].style.background = '#E48221'
+            }
+        }
+       
+        function ChangeStatus() {
+            let input = document.getElementById('status_project').value
+            if(input !== 'All Project') {
+                window.location = '/filterProject/' + input
+            } else {
+                window.location = '/project'
+            }
+        }
+    </script>
+
+</body>
+
+</html>

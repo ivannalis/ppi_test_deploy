@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headlink'); %>
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<style>
+    table .table {
+        table-layout: auto !important;
+        width: 100px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    table td,
+    table thead th {
+        white-space: normal !important;
+        padding: 10px 10px !important;
+        font-size: 14px;
+    }
+
+    #scrollSidebar {
+        height: 500px;
+        position: relative;
+        overflow-y: scroll;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+
+<body>
+    <%- include('./partials/header'); %>
+    <div class="az-content az-content-dashboard">
+        <div class="container">
+            <div class="az-content-body">
+
+                <div class="az-dashboard-one-title">
+                    <div>
+                        <h2 class="az-dashboard-title">Dashboard</h2>
+                        <p class="az-dashboard-text">Selamat datang di Dashboard PPI Compact</p>
+                    </div>
+                    <div class="az-content-header-right">
+                        <div class="media">
+                            <div class="media-body">
+                                <label>Start</label>
+                                <h6>Januari 2021</h6>
+                            </div>
+                            <!-- media-body -->
+                        </div>
+                        <!-- media -->
+                        <div class="media">
+                            <div class="media-body">
+                                <label>Last Update</label>
+                                <h6>April 2021</h6>
+                            </div>
+                            <!-- media-body -->
+                        </div>
+                        <a class="btn btn-purple" disabled>Export</a>
+                    </div>
+                </div>
+                <!-- az-dashboard-one-title -->
+
+                <div class="az-dashboard-nav">
+                    <nav class="nav">
+                        <a class="nav-link active" data-toggle="tab" href="#">Summary</a>
+                        <!-- <a class="nav-link " data-toggle="tab" href="">Summary</a> -->
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Proteksi">Proteksi</a>
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Produksi">Produksi</a>
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Inklusi">Inklusi</a>
+                    </nav>
+
+                    <nav class="nav">
+                        <!-- <a class="nav-link" href="#"><i class="far fa-save"></i> Save Report</a> -->
+                        <a class="nav-link" onclick="printDiv()"  style="cursor: pointer;"><i class="far fa-file-pdf"></i> Print or Save as PDF</a>
+                        <a class="nav-link" href="#"><i class="far fa-envelope"></i>Send to Email</a>
+                        <a class="nav-link" href="#"><i class="fas fa-ellipsis-h"></i></a>
+                    </nav>
+                </div>
+                <div id="printArea">
+                    <div class="row row-sm mg-b-20">
+                        <div class="col-lg-4">
+                            <div id="scrollSidebar" class="card card-dashboard-pageviews">
+                                <div class="card-header">
+                                    <h6 class="card-title">Rumusan Indikator Target</h6>
+                                    <p class="card-text">Indikator Target PPI Compact Kab. Kubu Raya</p>
+                                </div>
+                                <!-- card-header -->
+                                <div class="card-body">
+                                    <% if(katppi.length!=0){
+                                        let i=1;
+                                        katppi.forEach(function(data){ %>
+                                    <div id="listIndikator" class="az-list-item">
+                                        <div>
+                                            <span style="display: block;"><%= data.kat_ppi %></span>
+                                            <a href="/indikatorTable/<%=data.id_katppi %>/<%=data.indikator %>"
+                                                style="font-size: 14px;color:#000;"><%= data.indikator %></a>
+                                        </div>
+                                        <div>
+                                            <h6 class="tx-primary"><%= data.progress+'%' %>
+                                            </h6>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <% i++; }) %>
+                                    <% } else { %>
+                                    <div class="az-list-item">
+                                        <div>
+                                            <h6> Belum ada data</h6>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                    <!-- list-group-item -->
+                                </div>
+                                <!-- card-body -->
+                            </div>
+                            <!-- card -->
+                        </div>
+                        <!-- col -->
+                        <div class="col-lg-8 mg-t-20 mg-lg-t-0">
+                            <div class="card card-table-one" style="height: 500px;">
+                                <h6 class="card-title"><%= kat %></h6>
+                                <p class="az-content-text mg-b-20">Detail Indikator PPI Compact</p>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="wd-45p">Indikator</th>
+                                                <th style="text-align: right;">Baseline</th>
+                                                <th>Target 2025</th>
+                                                <th>Progress</th>
+                                                <th>Satuan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if(indikator.length!=0){
+                                                let i=1;
+                                                indikator.forEach(function(data){ %>
+                                            <tr>
+                                                <td style="font-weight: bold;font-size: 12px;"><%= data.rincian %></td>
+                                                <td style="text-align: right;font-size: 12px;">
+                                                    <%= data.data_dasar.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); %>
+                                                </td>
+                                                <td style="font-size: 12px;"><%= data.indikator_capaian_2025.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");%>
+                                                </td>
+                                                <td style="font-size: 12px;"><%= data.indikator_capaian_2025.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");%>
+                                                </td>
+                                                <td style="font-size: 12px;"><%= data.satuan %></td>
+                                            </tr>
+                                            <% i++; }) %>
+                                            <% } else { %>
+                                            <tr>
+                                                <td>Belum ada data</td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- table-responsive -->
+                            </div>
+                            <!-- card-dashboard-four -->
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+                <!-- row -->
+                <div class="row row-sm mg-b-20" >
+                    <div class="col-lg-4" >
+                        <div class="card card-dashboard-pageviews"  style="height: 345px;">
+                            <div class="card-header">
+                                <h6 class="card-title">Implementasi PPI Compact</h6>
+                                <p class="card-text">Proporsi Implementasi PPI Compact</p>
+                            </div><!-- card-header -->
+                            <div class="card-body">
+                                <div class="az-list-item">
+                                    <div>
+                                        <h6>Proteksi</h6>
+                                        <span>Persentase implementasi aktivitas Proteksi</span>
+                                    </div>
+                                    <div>
+                                        <h6 class="tx-primary">30%</h6>
+                                        <!-- <span>31.74% (-100.00%)</span> -->
+                                    </div>
+                                </div><!-- list-group-item -->
+                                <div class="az-list-item">
+                                    <div>
+                                        <h6>Produksi</h6>
+                                        <span>Persentase implementasi aktivitas Produksi</span>
+                                    </div>
+                                    <div>
+                                        <h6 class="tx-primary">30%</h6>
+                                        <!-- <span>28.53% (-100.00%)</span> -->
+                                    </div>
+                                </div><!-- list-group-item -->
+                                <div class="az-list-item">
+                                    <div>
+                                        <h6>Inklusi</h6>
+                                        <span>Persentase implementasi aktivitas Iklusi</span>
+                                    </div>
+                                    <div>
+                                        <h6 class="tx-primary">40%</h6>
+                                        <!-- <span>25.35% (-100.00%)</span> -->
+                                    </div>
+                                </div><!-- list-group-item -->
+                            </div><!-- card-body -->
+                        </div><!-- card -->
+                    </div><!-- col -->
+                    <div class="col-lg-8 mg-t-20 mg-lg-t-0" style="height: 345px;">
+                        <div class="card card-dashboard-four">
+                            <div class="card-header">
+                                <h6 class="card-title">Persentase Implementasi PPI Compact</h6>
+                            </div><!-- card-header -->
+                            <div class="card-body row">
+                                <div class="col-md-6 d-flex align-items-center" style="padding:0px">
+                                    <div class="highcharts-figure">
+                                        <div id="container"></div>
+                                    </div>
+                                </div><!-- col -->
+                                <div class="col-md-6 col-lg-5 mg-lg-l-auto mg-t-20 mg-md-t-0">
+                                    <div class="az-traffic-detail-item">
+                                        <div>
+                                            <span>Proteksi</span>
+                                            <span>30%</span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-purple wd-25p" role="progressbar"
+                                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(124, 181, 236) !important;"></div>
+                                        </div><!-- progress -->
+                                    </div>
+                                    <div class="az-traffic-detail-item">
+                                        <div>
+                                            <span>Produksi</span>
+                                            <span>30%</span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-primary wd-20p" role="progressbar"
+                                                aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(67, 67, 72) !important;"></div>
+                                        </div><!-- progress -->
+                                    </div>
+                                    <div class="az-traffic-detail-item">
+                                        <div>
+                                            <span>Iklusi</span>
+                                            <span>40%</span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info wd-30p" role="progressbar"
+                                                aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="background-color: rgb(144, 237, 125) !important;">
+                                            </div>
+                                        </div><!-- progress -->
+                                    </div>
+                                </div><!-- col -->
+                            </div><!-- card-body -->
+                        </div><!-- card-dashboard-four -->
+                    </div><!-- col -->
+                </div>
+            </div>
+            </div>
+            <!-- az-content-body -->
+        </div>
+    </div>
+    <!-- az-content -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script>
+      // Build the chart
+Highcharts.chart('container', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie',
+          // Edit chart spacing
+        spacingBottom: 0,
+        // spacingTop: 60,
+        // spacingLeft: 15,
+        // spacingRight: 10,
+        // Explicitly tell the width and height of a chart
+        width: 380,
+        height: 250
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            size:150,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            },
+            showInLegend: false
+        }
+    },
+    series: [{
+        name: 'Brands',
+        colorByPoint: true,
+        data: [{
+            name: 'Proteksi',
+            y: 30,
+            sliced: true,
+            selected: true,
+           
+        }, {
+            name: 'Produksi',
+            y: 30,
+           
+        }, {
+            name: 'Inklusi',
+            y: 40,
+           
+        }]
+    }]
+});
+
+function printDiv(){
+			var printContents = document.getElementById('printArea').innerHTML;
+			var originalContents = document.body.innerHTML;
+
+			document.body.innerHTML = printContents;
+
+			window.print();
+
+			document.body.innerHTML = originalContents;
+
+		}
+    </script>
+    <%- include('./partials/footer'); %>
+
+    <%- include('./partials/footlink'); %>
+</body>
+
+</html>

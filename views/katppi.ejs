@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/headlink'); %>
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<style>
+    table .table {
+        table-layout: auto !important;
+        width: 100px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    table td,
+    table thead th {
+        white-space: normal !important;
+        padding: 10px 10px !important;
+        font-size: 14px;
+    }
+
+    #scrollSidebar {
+        height: 500px;
+        position: relative;
+        overflow-y: scroll;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+
+<body>
+    <%- include('./partials/header'); %>
+    <div class="az-content az-content-dashboard">
+        <div class="container">
+            <div class="az-content-body">
+
+                <div class="az-dashboard-one-title">
+                    <div>
+                        <h2 class="az-dashboard-title">Dashboard - <%= ppi %></h2>
+                        <p class="az-dashboard-text">Selamat datang di Dashboard PPI Compact</p>
+                    </div>
+                    <div class="az-content-header-right">
+                        <div class="media">
+                            <div class="media-body">
+                                <label>Start</label>
+                                <h6>Januari 2021</h6>
+                            </div>
+                            <!-- media-body -->
+                        </div>
+                        <!-- media -->
+                        <div class="media">
+                            <div class="media-body">
+                                <label>Last Update</label>
+                                <h6>April 2021</h6>
+                            </div>
+                            <!-- media-body -->
+                        </div>
+                        <a class="btn btn-purple" disabled>Export</a>
+                    </div>
+                </div>
+                <!-- az-dashboard-one-title -->
+                <div class="az-dashboard-nav">
+                    <nav class="nav">
+                        <a class="nav-link" data-toggle="tab"
+                            href="/indikatorTable/2/Luas dan laju deforestasi dan degradasi menurun">Summary</a>
+                        <!-- <a class="nav-link " data-toggle="tab" href="/dashboardSummary">Summary</a> -->
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Proteksi">Proteksi</a>
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Produksi">Produksi</a>
+                        <a class="nav-link" data-toggle="tab" href="/katppi/Inklusi">Inklusi</a>
+                    </nav>
+
+                    <nav class="nav">
+                        <!-- <a class="nav-link" href="#"><i class="far fa-save"></i> Save Report</a> -->
+                        <a class="nav-link" onclick="printDiv()" style="cursor: pointer;"><i class="far fa-file-pdf"></i> Print or Save as PDF</a>
+                        <a class="nav-link" href="#"><i class="far fa-envelope"></i>Send to Email</a>
+                        <a class="nav-link" href="#"><i class="fas fa-ellipsis-h"></i></a>
+                    </nav>
+                </div>
+                <div id="printArea">
+                <% if(detailppi.length!=0){
+                    let i=1;
+                    detailppi.forEach(function(data){ %>
+                <div class="row row-sm mg-b-20">
+                    <!-- row -->
+                    <div class="col-lg-7 ht-lg-100p">
+                        <div class="card card-dashboard-one">
+                            <div class="card-header">
+                                <div>
+                                    <h6 class="card-title"><%= data.kat_ppi  %></h6>
+                                    <p class="card-text"><small> Rincian Target :</small></p>
+                                    <p class="card-text"><%= data.rincian + ' ' %>(<%= data.satuan%>)</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn">Bulanan</button>
+                                    <button class="btn">Tahunan</button>
+                                </div>
+                            </div>
+                            <!-- card-header -->
+                            <div class="card-body">
+                                <div class="card-body-top">
+                                    <div>
+                                        <label class="mg-b-0">Baseline/tahun</label>
+                                        <h2><%= data.data_dasar.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' ' %><small
+                                                style="font-size: 14px;"><%= data.satuan%></small></h2>
+                                    </div>
+                                    <div>
+                                        <label class="mg-b-0">Baseline/bulan</label>
+                                        <h2><%= (parseInt(data.data_dasar / 12)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' ' %><small
+                                                style="font-size: 14px;"><%= data.satuan.replace('/tahun','')%></small>
+                                        </h2>
+                                    </div>
+                                    <div>
+                                        <label class="mg-b-0">Total Per <%= data.last_update %></label>
+                                        <h2><%= data.progress.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' ' %><small
+                                                style="font-size: 14px;"><%= data.satuan.replace('/tahun','')%></small>
+                                        </h2>
+                                    </div>
+                                    <!-- <div>
+                                        <label class="mg-b-0">Target Capaian (2025)</label>
+                                        <h2><%= data.indikator_capaian_2025.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' ' %><small style="font-size: 14px;">(<%= data.satuan%>)</small></h2>
+                                    </div>         -->
+                                </div>
+                                <!-- card-body-top -->
+                                <figure class="highcharts-figure">
+                                    <div id="container<%= data.id_detail_kat_ppi  %>"></div>
+                                </figure>
+                                <!-- flot-chart-wrapper -->
+                            </div>
+                            <!-- card-body -->
+                        </div>
+                        <!-- card -->
+                    </div>
+                    <!-- col -->
+                    <div class="col-lg-5 mg-t-20 mg-lg-t-0">
+                        <div class="row row-sm">
+                            <!-- col -->
+                            <div class="col-sm-12 mg-t-20" style="margin-top:0">
+                                <div class="card card-dashboard-three" style="border-bottom: none;">
+                                    <div class="card-header">
+                                        <p>Baseline/tahun vs Total <%= data.rincian %> Per <%= data.last_update %></p>
+                                        <h6><%= (data.progress - data.data_dasar).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %>
+                                            <small class="tx-success"><i class="icon ion-md-arrow-up"></i>
+                                            </small></h6>
+                                        <small>'Baseline' adalah data dasar yang telah ditentukan.</small>
+                                    </div>
+                                    <!-- card-header -->
+                                    <div class="card-body" style="height: 200px;">
+                                        <div id="containerleft1<%= data.id_detail_kat_ppi  %>"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- col -->
+                            <div class="col-sm-12 mg-t-20"  style="margin-top:0">
+                                <div class="card card-dashboard-three">
+                                    <div class="card-header">
+                                        <p>Indikator 2025 vs Capaian <%= data.rincian %> Per <%= data.last_update %></p>
+                                        <h6><%= (data.progress - data.indikator_capaian_2025).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %>
+                                        </h6>
+                                        <small>'Indikator tahun 2015' adalah nilai target yang ingin dicapai pada
+                                            2025.</small>
+                                    </div><!-- card-header -->
+                                    <div class="card-body" style="height: 200px;">
+                                        <div id="containerleft2<%= data.id_detail_kat_ppi  %>"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- row -->
+                    </div>
+                    <!--col -->
+                </div>
+                <% i++; }) %>
+                <% } else { %>
+                <div class="az-list-item">
+                    <div>
+                        <h6> Belum ada data</h6>
+                    </div>
+                </div>
+                <% } %>
+                </div>
+                <!-- row -->
+            </div>
+            <!-- az-content-body -->
+        </div>
+    </div>
+    <!-- az-content -->
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script>
+        "<% for(let a=0; a <Object.values(datagrafik).length; a++) { %>"
+
+        Highcharts.chart('container<%=Object.values(datagrafik)[a].id_detail_kat_ppi%>', {
+            chart: {
+                // Edit chart spacing
+                spacingBottom: 0,
+                spacingTop: 60,
+                spacingLeft: 15,
+                spacingRight: 10,
+                // Explicitly tell the width and height of a chart
+                width: null,
+                height: 258
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: <%-JSON.stringify(Object.values(datagrafik)[a].last_update)%>,
+                title:'Update'
+            }, yAxis: { 
+                title: {
+                    text: '<%= Object.values(datagrafik)[a].satuan %>'
+                }
+            },
+            labels: {
+                items: [{
+                    html: '',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: ( // theme
+                            Highcharts.defaultOptions.title.style &&
+                            Highcharts.defaultOptions.title.style.color
+                        ) || 'black'
+                    }
+                }]
+            },
+            series: [{
+                type: 'column',
+                name: '<%= Object.values(datagrafik)[a].rincian %>',
+                color:'rgba(71, 77, 255, 1)',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].update_capaian)%>
+            },{
+                type: 'spline',
+                name: 'Baseline Bulanan',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].data_dasar)%>,
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                }
+            }]
+        });
+        "<% } %>"
+
+        "<% for(let a=0; a <Object.values(datagrafik).length; a++) { %>"
+
+        Highcharts.chart('containerleft1<%=Object.values(datagrafik)[a].id_detail_kat_ppi%>', {
+            chart: {
+                type:'column',
+                // Edit chart spacing
+                // spacingBottom: 80,
+                spacingTop: 5,
+                spacingLeft: null,
+                spacingRight: null,
+                // Explicitly tell the width and height of a chart
+                width: 280,
+                // height: 258
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: <%-JSON.stringify(Object.values(datagrafik)[a].last_update)%>,
+                title:'Update'
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    grouping: false,
+                    shadow: false,
+                    borderWidth: 0
+                }
+            },
+            yAxis:{
+                visible:false
+            },
+            series: [{
+                name: 'Baseline',
+                color: 'rgba(248,161,63,0.8)',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].data_dasar)%>.map(a => {return a*12}),
+                pointPadding: 0.3,
+                pointPlacement: -0.2
+            }, {
+                name: 'Data Per...',
+                color: 'rgba(71, 77, 255, 0.8)',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].update_capaian)%>,
+                pointPadding: 0.4,
+                pointPlacement: -0.2
+            }]
+        });
+        "<% } %>"
+
+        "<% for(let a=0; a <Object.values(datagrafik).length; a++) { %>"
+
+        Highcharts.chart('containerleft2<%=Object.values(datagrafik)[a].id_detail_kat_ppi%>', {
+            chart: {
+                type:'column',
+                // Edit chart spacing
+                // spacingBottom: 80,
+                spacingTop: 5,
+                spacingLeft: null,
+                spacingRight: null,
+                // Explicitly tell the width and height of a chart
+                width: 280,
+                // height: 258
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: <%-JSON.stringify(Object.values(datagrafik)[a].last_update)%>,
+                title:'Update'
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    grouping: false,
+                    shadow: false,
+                    borderWidth: 0
+                }
+            },
+            yAxis:{
+                visible:false
+            },
+            series: [{
+                name: 'Indikator Capaian 2025',
+                color: 'rgba(248,161,63,0.8)',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].indikator_capaian_2025)%>,
+                pointPadding: 0.3,
+                pointPlacement: -0.2
+            }, {
+                name: 'Data Per...',
+                color: 'rgba(71, 77, 255, 0.8)',
+                data: <%-JSON.stringify(Object.values(datagrafik)[a].update_capaian)%>,
+                pointPadding: 0.4,
+                pointPlacement: -0.2
+            }]
+        });
+        "<% } %>"
+
+        function printDiv(){
+			var printContents = document.getElementById('printArea').innerHTML;
+			var originalContents = document.body.innerHTML;
+
+			document.body.innerHTML = printContents;
+
+			window.print();
+
+			document.body.innerHTML = originalContents;
+
+		}
+    </script>
+    <%- include('./partials/footer'); %>
+
+    <%- include('./partials/footlink'); %>
+</body>
+
+</html>
